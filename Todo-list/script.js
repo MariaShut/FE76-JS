@@ -25,29 +25,75 @@ btnAdd.textContent = 'Add';
 const todoList = document.createElement('ul');
 todoList.classList.add('todo-list');
 
-const task1 = document.createElement('li');
-task1.classList.add('task');
-task1.innerHTML = `
-  <div class="task__content">
-    <button class="task__checkbox"></button>
-    <p class="task__text">To do text</p>
-  </div>
-  <span class="task__date">28/03/2026</span>
-  <button class="task__delete">✖</button>
-`;
+// Create Task
+function createTask(taskText) {
+	const taskItem = document.createElement('li');
+	taskItem.classList.add('task');
 
-const task2 = document.createElement('li');
-task2.classList.add('task', 'task_completed');
-task2.innerHTML = `
-  <div class="task__content">
-    <button class="task__checkbox"></button>
-    <p class="task__text">To do text</p>
-  </div>
-  <span class="task__date">28/03/2026</span>
-  <button class="task__delete">✖</button>
-`;
+	// get current date
+	const date = new Date();
+	const dateStr = date.toLocaleDateString('ru-RU');
+
+	taskItem.innerHTML = `
+    <div class="task__content">
+      <button class="task__checkbox"></button>
+      <p class="task__text">${taskText}</p>
+    </div>
+    <span class="task__date">${dateStr}</span>
+    <button class="task__delete">✖</button>
+  `;
+
+	todoList.append(taskItem);
+}
+
+function handleAddTask() {
+	const inputText = taskInput.value.trim();
+
+	// (prevent from doom clicks on add)
+	if (inputText !== '') {
+		createTask(inputText);
+
+		taskInput.value = ''; // input to be ready & empty for the next todos
+		taskInput.focus(); // return focus to input for continuing typing after adding
+	}
+}
+
+// To Add on button click
+btnAdd.addEventListener('click', handleAddTask);
+
+// To Add on enter
+taskInput.addEventListener('keydown', (event) => {
+	if (event.key === 'Enter') {
+		handleAddTask();
+	}
+});
+
+// To Delete all
+btnDeleteAll.addEventListener('click', () => {
+	todoList.innerHTML = '';
+});
+
+// Specific ToDo Item. (Event Delegation)
+todoList.addEventListener('click', (event) => {
+	// To Delete task
+	if (event.target.classList.contains('task__delete')) {
+		const taskItem = event.target.closest('.task'); // (<li>). Closest li.task to the .task__delete
+
+		if (taskItem) {
+			taskItem.remove();
+		}
+	}
+
+	// To Check completed task
+	if (event.target.classList.contains('task__checkbox')) {
+		const taskItem = event.target.closest('.task');
+
+		if (taskItem) {
+			taskItem.classList.toggle('task_completed');
+		}
+	}
+});
 
 header.append(btnDeleteAll, taskInput, btnAdd);
-todoList.append(task1, task2);
 container.append(header, todoList);
 root.append(container);
