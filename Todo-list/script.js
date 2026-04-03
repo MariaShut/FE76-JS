@@ -43,7 +43,7 @@ function createTask(taskText) {
     <button class="task__delete">✖</button>
   `;
 
-	todoList.append(taskItem);
+	todoList.prepend(taskItem);
 }
 
 function handleAddTask() {
