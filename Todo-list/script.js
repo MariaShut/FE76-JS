@@ -25,21 +25,72 @@ btnAdd.textContent = 'Add';
 const todoList = document.createElement('ul');
 todoList.classList.add('todo-list');
 
+// ===== LOCAL STORAGE =====
+
+// 25.1 Создать ключ todos в localStorage
+// 25.2 Написать две функции getDatа и setDatа для получения и записи данных в localStorage
+// 25.3 Проверка: если данных нет - возвращаем []
+
+function getData() {
+	const data = localStorage.getItem('todos');
+	return data ? JSON.parse(data) : [];
+}
+
+function setData(todos) {
+	localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+/*
+const todo = {
+	id: 1,
+	date: '19:35 17 sept',
+	text: 'Play video games',
+	isChecked: true,
+}
+*/
+
+function generateId() {
+	return Math.round(Date.now() + Math.random());
+}
+
+function getFormattedDate() {
+	const now = new Date();
+	const hours = now.getHours().toString().padStart(2, '0');
+	const minutes = now.getMinutes().toString().padStart(2, '0');
+	const day = now.getDate();
+	const month = now.toLocaleString('ru-RU', { month: 'short' }).replace('.', '');
+	return `${hours}:${minutes} ${day} ${month}`;
+}
+
+function loadTasks() {
+	const todos = getData();
+
+	todos.forEach((todo) => {
+		createTask(todo.text, todo.isChecked, todo.date, todo.id);
+	});
+}
+
 // Create Task
-function createTask(taskText) {
+function createTask(taskText, isChecked = false, dateStr = null, id = null) {
 	const taskItem = document.createElement('li');
 	taskItem.classList.add('task');
 
-	// get current date
-	const date = new Date();
-	const dateStr = date.toLocaleDateString('ru-RU');
+	if (id !== null) {
+		taskItem.dataset.id = id;
+	}
+
+	if (isChecked) {
+		taskItem.classList.add('task_completed');
+	}
+
+	const displayDate = dateStr || getFormattedDate();
 
 	taskItem.innerHTML = `
     <div class="task__content">
       <button class="task__checkbox"></button>
       <p class="task__text">${taskText}</p>
     </div>
-    <span class="task__date">${dateStr}</span>
+    <span class="task__date">${displayDate}</span>
     <button class="task__delete">✖</button>
   `;
 
@@ -51,16 +102,47 @@ function handleAddTask() {
 
 	// (prevent from doom clicks on add)
 	if (inputText !== '') {
+		const newTodo = {
+			id: generateId(),
+			date: getFormattedDate(),
+			text: inputText,
+			isChecked: false,
+		};
+
 		createTask(inputText);
+
+		/*
+		25.4 Сохранять карточки в localStorage:
+		Структура хранения данных карточек задач:
+		const todos = [{}, {}, {}, {}, {}, {}, {}, {}]
+		*/
+		const todos = getData();
+		todos.push(newTodo);
+		setData(todos);
+		// console.log(todos);
 
 		taskInput.value = ''; // input to be ready & empty for the next todos
 		taskInput.focus(); // return focus to input for continuing typing after adding
 	}
 }
 
+// 25. Save checked / unchecked and deletion to localStorage
+function saveTaskState(taskId, isChecked) {
+	const todos = getData();
+	todos.find((todo) => todo.id == taskId).isChecked = isChecked;
+	setData(todos);
+}
+
+function deleteTask(taskId) {
+	const todos = getData();
+	const filteredTodos = todos.filter((todo) => todo.id != taskId);
+	setData(filteredTodos);
+}
+
+// ===== EVENTS =====
+
 // To Add on button click
 btnAdd.addEventListener('click', handleAddTask);
-
 // To Add on enter
 taskInput.addEventListener('keydown', (event) => {
 	if (event.key === 'Enter') {
@@ -71,25 +153,27 @@ taskInput.addEventListener('keydown', (event) => {
 // To Delete all
 btnDeleteAll.addEventListener('click', () => {
 	todoList.innerHTML = '';
+	setData([]);
 });
 
-// Specific ToDo Item. (Event Delegation)
+// Specific ToDo Item
 todoList.addEventListener('click', (event) => {
+	const taskItem = event.target.closest('.task'); // (<li>). Closest li.task to the .task__delete
+	if (!taskItem) return;
+
+	const taskId = taskItem.dataset.id;
+
 	// To Delete task
 	if (event.target.classList.contains('task__delete')) {
-		const taskItem = event.target.closest('.task'); // (<li>). Closest li.task to the .task__delete
-
-		if (taskItem) {
-			taskItem.remove();
-		}
+		taskItem.remove();
+		if (taskId) deleteTask(taskId);
 	}
 
 	// To Check completed task
 	if (event.target.classList.contains('task__checkbox')) {
-		const taskItem = event.target.closest('.task');
-
-		if (taskItem) {
-			taskItem.classList.toggle('task_completed');
+		const isChecked = taskItem.classList.toggle('task_completed');
+		if (taskId) {
+			saveTaskState(taskId, isChecked);
 		}
 	}
 });
@@ -97,3 +181,5 @@ todoList.addEventListener('click', (event) => {
 header.append(btnDeleteAll, taskInput, btnAdd);
 container.append(header, todoList);
 root.append(container);
+
+loadTasks();
