@@ -109,7 +109,7 @@ function handleAddTask() {
 			isChecked: false,
 		};
 
-		createTask(inputText);
+		createTask(newTodo.text, newTodo.isChecked, newTodo.date, newTodo.id);
 
 		/*
 		25.4 Сохранять карточки в localStorage:
