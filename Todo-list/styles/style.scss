@@ -1,0 +1,194 @@
+$radius: 20px;
+$clr-min: #fff;
+$clr-secondary: #715d9b;
+$clr-secondary-lt: #9c8ac4;
+$clr-del: #b24a75;
+
+$transition: all 0.3s ease-in-out;
+
+%glass {
+	background: rgba($clr-min, 0.15);
+	backdrop-filter: blur(15px);
+	border: 1px solid rgba($clr-min, 0.3);
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	border-radius: $radius;
+}
+
+@mixin font($fontSize, $lineHeight, $fontWeight: 400) {
+	font-size: $fontSize;
+	line-height: $lineHeight;
+	font-weight: $fontWeight;
+}
+
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body {
+	min-height: 100vh;
+	font-family: 'Onest', sans-serif;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 21px;
+	background-color: hsla(28, 100%, 74%, 1);
+	background-image:
+		radial-gradient(at 40% 20%, hsla(28, 100%, 74%, 1) 0px, transparent 50%), radial-gradient(at 80% 0%, hsla(189, 100%, 56%, 1) 0px, transparent 50%), radial-gradient(at 0% 50%, hsla(355, 100%, 93%, 1) 0px, transparent 50%), radial-gradient(at 80% 50%, hsla(340, 100%, 76%, 1) 0px, transparent 50%),
+		radial-gradient(at 0% 100%, hsla(22, 100%, 77%, 1) 0px, transparent 50%), radial-gradient(at 80% 100%, hsla(242, 100%, 70%, 1) 0px, transparent 50%), radial-gradient(at 0% 0%, hsla(343, 100%, 76%, 1) 0px, transparent 50%);
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+}
+
+#root {
+	margin: 80px auto 0;
+	padding: 40px 0;
+	max-width: 900px;
+	border-radius: 30px;
+	border: 1px solid $clr-min;
+}
+
+.container {
+	margin: 0 auto;
+	padding: 0 15px;
+	width: 100%;
+}
+
+.btn {
+	padding: 10px 20px;
+	border: none;
+	border-radius: 10px;
+	font-family: inherit;
+	@include font(14px, 18px, 700);
+	color: $clr-min;
+	background-color: $clr-secondary-lt;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+	cursor: pointer;
+	transition: $transition;
+
+	&:hover {
+		background-color: $clr-secondary;
+	}
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	gap: 30px;
+	margin-bottom: 40px;
+	padding: 40px 20px;
+	@extend %glass;
+}
+
+.header__input {
+	flex-grow: 1;
+	border: none;
+	border-bottom: 1px solid $clr-min;
+	@include font(24px, 28px, 400);
+	color: $clr-secondary;
+	background-color: transparent;
+
+	&:focus {
+		outline: none;
+	}
+
+	&::placeholder {
+		color: $clr-min;
+	}
+}
+
+.header__btn {
+	flex: 0 0 110px;
+}
+
+// TO DO LIST
+
+.todo-list {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	list-style: none;
+}
+
+.task {
+	position: relative;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	padding: 20px;
+	padding-right: 50px;
+	@extend %glass;
+
+	&__content {
+		display: flex;
+		align-items: center;
+		gap: 15px;
+		flex-grow: 1;
+	}
+
+	&__checkbox {
+		flex-shrink: 0;
+		width: 22px;
+		height: 22px;
+		border-radius: 50%;
+		border: 2px solid rgba($clr-min, 0.6);
+		background: transparent;
+		cursor: pointer;
+	}
+
+	&__text {
+		@include font(24px, 28px, 400);
+		color: $clr-secondary;
+	}
+
+	&__date {
+		@include font(16px, 19px, 600);
+		color: rgba($clr-min, 0.7);
+	}
+
+	&__delete {
+		position: absolute;
+		top: 10px;
+		right: 20px;
+		background: none;
+		border: none;
+		font-size: 16px;
+		color: rgba($clr-min, 0.5);
+		cursor: pointer;
+		transition: $transition;
+
+		&:hover {
+			color: $clr-del;
+		}
+	}
+
+	// ----- TASK COMPLETED -----
+
+	&_completed {
+		.task__checkbox {
+			background-color: $clr-secondary-lt;
+			border-color: $clr-secondary-lt;
+			position: relative;
+
+			&::after {
+				position: absolute;
+				content: '\2714';
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				font-size: 14px;
+				color: $clr-min;
+			}
+		}
+
+		.task__text {
+			text-decoration: line-through;
+			color: rgba($clr-min, 0.4);
+		}
+
+		.task__date {
+			color: rgba($clr-min, 0.4);
+		}
+	}
+}
