@@ -4,12 +4,10 @@ import { generateId, getFormattedDate } from './utils.js';
 export function loadTasks(todoList) {
 	const todos = getData();
 
-	todos.forEach((todo) => {
-		createTask(todo.text, todo.isChecked, todo.date, todo.id, todoList);
-	});
+	todos.forEach((todo) => createTask({ ...todo, todoList }));
 }
 
-export function createTask(taskText, isChecked = false, dateStr = null, id = null, todoList) {
+export function createTask({ text, isChecked = false, date = null, id = null, todoList }) {
 	const taskItem = document.createElement('li');
 	taskItem.classList.add('task');
 
@@ -21,12 +19,12 @@ export function createTask(taskText, isChecked = false, dateStr = null, id = nul
 		taskItem.classList.add('task_completed');
 	}
 
-	const displayDate = dateStr || getFormattedDate();
+	const displayDate = date || getFormattedDate();
 
 	taskItem.innerHTML = `
     <div class="task__content">
       <button class="task__checkbox"></button>
-      <p class="task__text">${taskText}</p>
+      <p class="task__text">${text}</p>
     </div>
     <span class="task__date">${displayDate}</span>
     <button class="task__delete">✖</button>
@@ -46,7 +44,7 @@ export function handleAddTask(taskInput, todoList) {
 			isChecked: false,
 		};
 
-		createTask(newTodo.text, newTodo.isChecked, newTodo.date, newTodo.id, todoList);
+		createTask({ ...newTodo, todoList });
 
 		const todos = getData();
 		todos.push(newTodo);
@@ -60,7 +58,8 @@ export function handleAddTask(taskInput, todoList) {
 // Save checked / unchecked and deletion to localStorage
 export function saveTaskState(taskId, isChecked) {
 	const todos = getData();
-	todos.find((todo) => todo.id == taskId).isChecked = isChecked;
+	const todo = todos.find((todo) => todo.id == taskId);
+	if (todo) todo.isChecked = isChecked;
 	setData(todos);
 }
 
