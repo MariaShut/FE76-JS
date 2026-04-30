@@ -1,0 +1,80 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	display: flex;
+	justify-content: center;
+	min-height: 100vh;
+	font-family: 'Onest', sans-serif;
+	align-items: center;
+	background: #d3c0a6;
+}
+
+/* Timer */
+
+.container {
+	padding: 40px;
+	background: rgba(255, 255, 255, 0.5);
+	backdrop-filter: blur(15px);
+	border: 1px solid rgba(255, 255, 255, 0.5);
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	border-radius: 20px;
+	text-align: center;
+}
+
+.timer {
+	margin-bottom: 30px;
+	padding: 20px;
+	backdrop-filter: blur(15px);
+	border: 1px solid rgba(255, 255, 255, 0.5);
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	border-radius: 20px;
+}
+
+#time {
+	font-size: 32px;
+	color: #333;
+}
+
+/* Buttons */
+
+.buttons {
+	display: flex;
+	gap: 15px;
+	justify-content: center;
+}
+
+.btn {
+	padding: 15px 35px;
+	font-size: 16px;
+	border: none;
+	border-radius: 10px;
+	cursor: pointer;
+	font-weight: 600;
+	color: #fff;
+	transition: all 0.3s ease-in-out;
+	background-color: #b6a085;
+}
+
+.btn:hover {
+	transform: scale(1.05);
+}
+
+.btn:active {
+	transform: scale(0.97);
+}
+
+.btn_start:hover {
+	background: #8e9a7f;
+}
+
+.btn_stop:hover {
+	background: #cc7b77;
+}
+
+.btn_reset:hover {
+	background: #729ab1;
+}
