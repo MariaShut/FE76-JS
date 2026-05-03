@@ -1,0 +1,30 @@
+body {
+	background-color: #d8dcc8;
+}
+
+ul {
+	margin: 30px auto;
+	padding: 0;
+	max-width: 55%;
+	list-style: none;
+}
+
+.todo-item {
+	background-color: #fdfef8;
+	color: #494f40;
+	border: 1px solid #f0e4ca;
+	border-radius: 10px;
+	margin-bottom: 10px;
+	padding: 15px 30px;
+	font-size: 20px;
+	box-shadow: 2px 2px 5px rgba(176, 156, 122, 0.5);
+	cursor: pointer;
+	transition: all 0.3s ease-in-out;
+}
+
+.completed {
+	background-color: #c0c6a8;
+	text-decoration: line-through;
+	color: #8e77ba;
+	border-color: #beaf61;
+}
